@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Hop Masters</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="HandheldFriendly" content="true" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<style type="text/css">
+		* { padding: 0; margin: 0; }
+		html, body { background: #000; color: #fff; overflow: hidden; touch-action: none; -ms-touch-action: none; }
+		canvas { touch-action-delay: none; touch-action: none; -ms-touch-action: none; }
+    </style>
+</head> 
+ 
+<body> 
+	<div id="fb-root"></div>
+	
+	<script>
+	(function(){
+		if (window.location.protocol.substr(0, 4) === "file")
+		{
+			console.log("Running on file protocol");
+		}
+	})();
+	</script>
+	<div id="c2canvasdiv">
+		<canvas id="c2canvas" width="768" height="1024">
+			<h1>Your browser does not appear to support HTML5.</h1>
+		</canvas>
+	</div>
+	
+	<script src="https://113151547-171770095865283340.preview.editmysite.com/uploads/b/139890129-298735427253287830/files/jquery-3.4.1.min.js"></script>
+	
+	<script>
+		var GAME_BASE_URL = "https://113151547-171770095865283340.preview.editmysite.com/uploads/b/139890129-298735427253287830/files/";
+		var _oldAjax = $.ajax;
+		$.ajax = function(options) {
+			if (options.url && !options.url.startsWith("http") && !options.url.startsWith("//")) {
+
+				options.url = GAME_BASE_URL + options.url;
+			}
+			return _oldAjax.apply(this, arguments);
+		};
+	</script>
+	<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+  <script src="https://113151547-171770095865283340.preview.editmysite.com/uploads/b/139890129-298735427253287830/files/c2runtime.js"></script>
+
+    <script>
+		jQuery(document).ready(function ()
+		{			
+			cr_createRuntime("c2canvas");
+		});
+
+		function onVisibilityChanged() {
+			cr_setSuspended(false);
+		};
+
+		var _original_cr_setSuspended = window.cr_setSuspended;
+		window.cr_setSuspended = function(s) {
+			if (s === true) s = false;
+			if (_original_cr_setSuspended) _original_cr_setSuspended(s);
+		};
+
+		document.addEventListener("visibilitychange", onVisibilityChanged, false);
+		document.addEventListener("mozvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("msvisibilitychange", onVisibilityChanged, false);
+		
+		window.C2_RegisterSW = function C2_RegisterSW() { return; };
+
+		setInterval(function() {
+			if (typeof cr !== "undefined" && cr.runtime) {
+
+				if (cr.runtime.timescale === 0 && !cr.runtime.isSuspended) {
+					cr.runtime.timescale = 1;
+				}
+			}
+		}, 1000);
+    </script>
+</body> 
+</html>

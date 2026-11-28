@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+		<title>Mini Springs</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+		<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/jquery.min.js"></script>
+ <script type="text/javascript">
+           window.SDK_OPTIONS = {
+              gameId: "0fgjih85qhaqvnklaxe91x9h5bcfirlr",
+              onEvent: function (a) {
+                 switch (a.name) {
+                    case "SDK_GAME_PAUSE":
+                       // pause game logic / mute audio
+                       break;
+                    case "SDK_GAME_START":
+                       // advertisement done, resume game logic and unmute audio
+                       break;
+                    case "SDK_READY":
+                       // when sdk is ready
+                       break;
+                 }
+              }
+           };
+        (function (a, b, c) {
+           var d = a.getElementsByTagName(b)[0];
+           a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdk.js", d.parentNode.insertBefore(a, d))
+        })(document, "script", "gamemonetize-sdk");
+
+		$(document).ready(function() {
+		 var strVar = '<div style="position:fixed;top:0;right:0;bottom:0;left:0;z-index:999;" id="nec">';
+		 $(document.body).append(strVar);
+		 $("#nec").click(function () {
+		      if (typeof sdk !== 'undefined' && sdk.showBanner !== 'undefined') {
+		            sdk.showBanner();
+		        }
+		            $('#nec').hide();
+		   });
+		});
+		window.setInterval(function(){
+		        $('#nec').show();
+		}, 300000);
+        </script>
+    </head>
+    <body oncontextmenu="return false;">
+        <canvas id="gameCanvas" width="100%" height="100%" style="background-color: #FFFFFF; top: 0px; position: absolute; left: 0px; display: block">Your browser requires Canvas support to play this game.</canvas>
+        <script>
+
+            function __msprings__Game__Start__(){
+
+                if(window.location.href.indexOf("msprings") >= 0){
+                    kongregateAPI.loadAPI(function(){
+                        Engine.System.run();
+                    });
+                }
+                else{
+                    Engine.System.run();
+                }
+            }
+        </script>
+        <script type="text/javascript" src="https://142940386-163529584002648173.preview.editmysite.com/uploads/b/146211889-401546326520077957/files/msprings.js" onload="__msprings__Game__Start__()"></script>
+		<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+
+		
+    </body>
+</html>

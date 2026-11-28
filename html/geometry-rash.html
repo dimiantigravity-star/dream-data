@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Geometry Rash</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script>
+    <script>
+      function gtag(){dataLayer.push(arguments)}
+      window.dataLayer=window.dataLayer||[];
+      gtag("js",new Date);
+      gtag("config","G-MENBM6GSNY");
+    </script>
+    <link rel="stylesheet" href="https://73682421-156786231973330113.preview.editmysite.com/uploads/b/153376646-907508270749215651/files/style.css" type="text/css">
+    <style>
+
+      #playOverlay {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.75);
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 4em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        z-index: 9999;
+      }
+    </style>
+</head>  
+<body>
+<script>
+  window.addEventListener("keydown", function(e) {
+      if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+          e.preventDefault();
+      }
+  }, false);
+</script>
+<script>
+if (location.protocol.substr(0, 4) ==="file")
+{
+    alert("Web exports won't work until you upload them. (When running on the file: protocol, browsers block many features from working for security reasons.)");
+}
+</script>  
+<noscript>
+    <div id="notSupportedWrap">
+        <h2 id="notSupportedTitle">This content requires JavaScript</h2>
+        <p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
+    </div>
+</noscript>
+
+<div id="playOverlay">PLAY</div>
+
+<script src="https://73682421-156786231973330113.preview.editmysite.com/uploads/b/153376646-907508270749215651/files/scripts/modernjscheck.js"></script>
+<script src="https://73682421-156786231973330113.preview.editmysite.com/uploads/b/153376646-907508270749215651/files/scripts/supportcheck.js"></script>
+
+<script>
+
+  document.getElementById('playOverlay').addEventListener('click', () => {
+    
+    const overlay = document.getElementById('playOverlay');
+    overlay.style.display = 'none';
+
+
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = 'https://73682421-156786231973330113.preview.editmysite.com/uploads/b/153376646-907508270749215651/files/scripts/main.js';
+    document.body.appendChild(script);
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body> 
+</html>

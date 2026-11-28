@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<style>html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}html,body{height:100%}canvas{display:block}body{margin:0}#unity-container{width:100%;height:100%;position:relative}#unity-canvas{width:100%;height:100%;background:#231F20}#loading-cover{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center}#unity-loading-bar{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;align-items:center}#unity-logo{text-align:center}#unity-logo img{max-width:80%;max-height:80%}#unity-progress-bar-empty{width:40%;height:24px;margin:10px 20px 20px 10px;text-align:left;border:1px solid white;padding:2px}#unity-progress-bar-full{width:0;height:100%;background:white}.light #unity-progress-bar-empty{border-color:black}.light #unity-progress-bar-full{background:black}.spinner,.spinner:after{border-radius:50%;width:5em;height:5em}.spinner{margin:10px;font-size:10px;position:relative;text-indent:-9999em;border-top:1.1em solid rgba(255,255,255,0.2);border-right:1.1em solid rgba(255,255,255,0.2);border-bottom:1.1em solid rgba(255,255,255,0.2);border-left:1.1em solid #ffffff;transform:translateZ(0);animation:spinner-spin 1.1s infinite linear}@keyframes spinner-spin{0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)}}</style>
+<style> body{overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}</style>
+
+<script type="text/javascript">
+const muteConsole = true;
+if (muteConsole) { console.log = console.warn = console.error = console.info = console.debug = ()=>{}; }
+</script><script type="text/javascript">
+    window.SDK_OPTIONS = {
+        gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
+        onEvent: function (a) {
+            switch (a.name) {
+                case "SDK_GAME_PAUSE":
+                    break;
+                case "SDK_GAME_START":
+                    break;
+                case "SDK_READY":
+                    break;
+            }
+        }
+    };
+    (function (a, b, c) {
+        var d = a.getElementsByTagName(b)[0];
+        if (!a.getElementById(c)) {
+            var e = a.createElement(b);
+            e.id = c;
+            e.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js";
+            d.parentNode.insertBefore(e, d);
+        }
+    })(document, "script", "gamemonetize-sdk");
+</script></head>
+<body class="dark">
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas"></canvas>
+</div>
+<div id="loading-cover" style="display:none;">
+<div id="unity-loading-bar">
+<div id="unity-progress-bar-empty" style="display: none;">
+<div id="unity-progress-bar-full"></div>
+</div>
+<div class="spinner"></div>
+</div>
+</div>
+
+
+
+
+<script>
+  const DATA_ENV = JSON.stringify({
+      "language": "en",
+      "domain": "com",
+      "deviceType": "desktop",
+      "isMobile": false,
+      "isDesktop": true,
+      "appID": "480670",
+      "browserLang": "en",
+      "payload": null,
+      "promptCanShow": false,
+      "reviewCanShow": false
+  });
+  const DATA_CLOUD = JSON.stringify([ JSON.stringify({ "language": "en", "promptDone": true }) ]);
+  const DATA_PLAYER = JSON.stringify({
+      "playerAuth": "resolved",
+      "playerName": "Guest",
+      "playerId": "guest_en",
+      "playerPhoto": "",
+      "payingStatus": "unknown"
+  });
+  var environmentData = DATA_ENV;
+  var cloudSaves = DATA_CLOUD; 
+  var playerData = DATA_PLAYER;
+  var paymentsData = "none";
+  window.environmentData = DATA_ENV;
+  window.cloudSaves = DATA_CLOUD;
+  window.playerData = DATA_PLAYER;
+  try {
+    Object.defineProperty(navigator, 'language', { value: 'en-US', configurable: true });
+    Object.defineProperty(navigator, 'languages', { value: ['en-US', 'en'], configurable: true });
+  } catch (e) {}
+
+  const hideFullScreenButton = "";
+  const buildUrl = "https://cdn.jsdelivr.net/gh/Safgiy/compose@13636a7c0af7f0f8da37b12972d4dc36e8f699fb/tls";
+  const loaderUrl = buildUrl + "/loader.js";
+  const config = {
+    dataUrl: buildUrl + "/docker.js",
+    frameworkUrl: buildUrl + "/tls.js",
+    codeUrl: buildUrl + "/webui.js",
+    streamingAssetsUrl: "StreamingAssets",
+  };
+
+  const container = document.querySelector("#unity-container");
+  const canvas = document.querySelector("#unity-canvas");
+  const loadingCover = document.querySelector("#loading-cover");
+  const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+  const progressBarFull = document.querySelector("#unity-progress-bar-full");
+  const spinner = document.querySelector(".spinner");
+
+  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) container.className = "unity-mobile";
+  loadingCover.style.display = "";
+
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  function FocusGame() { try { window.focus(); canvas.focus(); } catch {} }
+  window.addEventListener("pointerdown", FocusGame);
+  window.addEventListener("touchstart", FocusGame);
+
+  let StartUnityInstance;
+  let myGameInstance = null;
+  let ysdk = null;
+  let initGame = false;
+  let nowFullAdOpen = false;
+
+  
+  let lastAdTime = 0;
+  function canShowAd() { return Date.now() - lastAdTime > 30000; }
+  function FullAdShow() {
+    if (!canShowAd()) { myGameInstance?.SendMessage('YandexGame', 'CloseFullAd', 'false'); return; }
+    try {
+      if (nowFullAdOpen) return;
+      nowFullAdOpen = true;
+      lastAdTime = Date.now();
+      if (typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
+        sdk.showBanner();
+        setTimeout(() => { nowFullAdOpen = false; myGameInstance?.SendMessage('YandexGame', 'CloseFullAd', 'true'); FocusGame(); }, 3000);
+      } else {
+        nowFullAdOpen = false; myGameInstance?.SendMessage('YandexGame', 'CloseFullAd', 'false'); FocusGame();
+      }
+    } catch (e) {
+      nowFullAdOpen = false; myGameInstance?.SendMessage('YandexGame', 'CloseFullAd', 'false'); FocusGame();
+    }
+  }
+  function RewardedShow(id) {
+    if (!canShowAd()) { myGameInstance?.SendMessage('YandexGame', 'RewardUnavailable'); return; }
+    try {
+      lastAdTime = Date.now();
+      if (typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
+        sdk.showBanner();
+        setTimeout(() => {
+          myGameInstance?.SendMessage('YandexGame', 'RewardVideo', id);
+          myGameInstance?.SendMessage('YandexGame', 'CloseVideo');
+          FocusGame();
+        }, 3000);
+      } else {
+        myGameInstance?.SendMessage('YandexGame', 'RewardVideo', id);
+        myGameInstance?.SendMessage('YandexGame', 'CloseVideo');
+        FocusGame();
+      }
+    } catch (e) {
+      myGameInstance?.SendMessage('YandexGame', 'ErrorVideo'); FocusGame();
+    }
+  }
+
+  const mockPlayer = {
+      getName: () => "Guest",
+      getPhoto: () => "null",
+      getUniqueID: () => "guest_en",
+      getPayingStatus: () => "unknown",
+      setData: (data) => Promise.resolve(),
+      getData: () => Promise.resolve({}) 
+  };
+
+  window.ysdk = {
+      environment: { 
+          i18n: { lang: 'en', tld: 'com' },
+          app: { id: '480670' },
+          browser: { lang: 'en' }
+      },
+      features: { LoadingAPI: { ready: () => console.log("Mock LoadingAPI Ready") } },
+      adv: { 
+          showFullscreenAdv: (conf) => { if(conf?.callbacks?.onClose) conf.callbacks.onClose(false); },
+          showRewardedVideo: (conf) => { if(conf?.callbacks) { conf.callbacks.onOpen(); conf.callbacks.onRewarded(); conf.callbacks.onClose(); } } 
+      },
+      feedback: { canReview: () => Promise.resolve({ value: false }) },
+      auth: { openAuthDialog: () => Promise.resolve() },
+      getPlayer: () => Promise.resolve(mockPlayer),
+      getPayments: () => Promise.reject("none"),
+      getLeaderboards: () => Promise.reject("none")
+  };
+  window.YaGames = { init: () => Promise.resolve(window.ysdk) };
+
+  function RequestingEnvironmentData(sendback) {
+    if (sendback) myGameInstance?.SendMessage('YandexGame', 'SetEnvirData', DATA_ENV);
+    return DATA_ENV;
+  }
+
+  function InitPlayer(sendback) {
+    if (sendback) myGameInstance?.SendMessage('YandexGame', 'SetInitializationSDK', DATA_PLAYER);
+    return Promise.resolve(DATA_PLAYER);
+  }
+
+  function LoadCloud(sendback) {
+    if (sendback) myGameInstance?.SendMessage('YandexGame', 'SetLoadSaves', DATA_CLOUD);
+    return Promise.resolve(DATA_CLOUD);
+  }
+
+  function SaveCloud(jsonData, flush) {}
+  function InitLeaderboard() {}
+  function InitLeaderboards() {}
+  function GetLeaderboardScores() {}
+  function SetLeaderboardScores() {}
+  function GetPayments() { return Promise.resolve("none"); }
+  function ConsumePurchases() {}
+  function ConsumePurchase() {}
+  function BuyPayments() {}
+  function InitGame() { 
+      initGame = true; 
+      if (nowFullAdOpen) myGameInstance?.SendMessage('YandexGame', 'OpenFullAd'); 
+  }
+  function GameReadyAPI() {}
+  function StaticRBTDeactivate() {}
+
+  window._InitEnvironmentData_js = function(sb) { return RequestingEnvironmentData(sb); };
+  window._InitPlayer_js          = function(sb) { return InitPlayer(sb); };
+  window._LoadCloud_js           = function(sb) { return LoadCloud(sb); };
+  window._SaveCloud_js           = function(d, f) { SaveCloud(d, f); };
+
+  const script = document.createElement("script");
+  script.src = loaderUrl;
+  script.onload = () => {
+    StartUnityInstance = function () {
+      createUnityInstance(canvas, config, (progress) => {
+        spinner.style.display = "none";
+        progressBarEmpty.style.display = "";
+        progressBarFull.style.width = `${100 * progress}%`;
+      }).then(async (unityInstance) => {
+        myGameInstance = unityInstance;
+        loadingCover.style.display = "none";
+
+        await RequestingEnvironmentData(true);
+        await InitPlayer(true);
+        await LoadCloud(true);
+
+      }).catch((message) => {
+        console.error(message);
+      });
+    };
+    StartUnityInstance();
+  };
+  document.body.appendChild(script);
+</script>
+</body>
+</html>

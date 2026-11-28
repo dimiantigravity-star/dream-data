@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<script type="text/javascript">window.SDK_OPTIONS={gameId:"r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",onEvent:function(a){switch(a.name){case"SDK_GAME_PAUSE":break;case"SDK_GAME_START":break;case"SDK_READY":break}}};(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-sdk");</script>
+
+<style>
+
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0a1730;color:#f3f7ff;font:16px system-ui,sans-serif}
+
+iframe{display:block;border:0;width:100%;height:100%}
+
+p{position:absolute;inset:auto 0 45%;text-align:center;margin:0}
+
+a{color:inherit}
+
+</style>
+
+</head>
+
+<body>
+
+<iframe id="nitro-car-game" title="nitro.car" allow="autoplay; fullscreen; gamepad; clipboard-write"></iframe>
+
+
+
+<script type="text/javascript">
+
+  window.isAdShown = false;
+
+</script>
+
+
+
+<script>
+
+(async function () {
+
+  var mirror = "https://cdn.jsdelivr.net/gh/nitrocargit/files@";
+
+  var frame = document.getElementById("nitro-car-game");
+
+  try {
+
+    var latest = await fetch(mirror + "main/latest.json", { cache: "no-store" });
+
+    if (!latest.ok) throw new Error("latest.json: HTTP " + latest.status);
+
+    var commit = (await latest.json()).commit;
+
+    if (!/^[0-9a-f]{40}$/.test(commit)) throw new Error("latest.json: no commit");
+
+    var base = mirror + commit + "/";
+
+    var page = await fetch(base + "index.html");
+
+    if (!page.ok) throw new Error("index.html: HTTP " + page.status);
+
+    var triggerCode = '<script>window.sdk = window.parent.sdk; window.addEventListener("click", function(){ if(!window.parent.isAdShown && typeof window.parent.sdk !== "undefined" && typeof window.parent.sdk.showBanner === "function"){ window.parent.sdk.showBanner(); window.parent.isAdShown = true; } }, {once: true});<\/script>';
+
+
+
+    var html = (await page.text()).replace(/<head>/i, function (head) {
+
+      return head + '<base href="' + base + '">' + triggerCode;
+
+    });
+
+    
+
+    frame.srcdoc = html;
+
+    frame.focus();
+
+  } catch (error) {
+
+    console.error("nitro.car did not load", error);
+
+    var note = document.createElement("p");
+
+    note.innerHTML = 'nitro.car could not load. Reload the page, or play at <a href="https://nitro.car/" target="_blank" rel="noopener">nitro.car</a>.';
+
+    document.body.replaceChild(note, frame);
+
+  }
+
+})();
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+
+</body>
+
+</html>

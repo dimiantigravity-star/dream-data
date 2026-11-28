@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="user-scalable=no">
+	<title>Mr. Superfire</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+    <script>
+        window.addEventListener("load", function () {
+            function onTouchPreventDefault(event) {
+                event.preventDefault();
+            }
+            document.addEventListener("touchmove", onTouchPreventDefault, false);
+            document.addEventListener("touchstart", onTouchPreventDefault, false);}, false);
+    </script>
+    <style type="text/css">
+
+        @font-face {
+            font-family: 'gameFont';
+            src: url('https://7215292-239363040786649989.preview.editmysite.com/uploads/b/150529967-209305792643502816/files/assets/fnt/gamefont.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+    </style>
+</head>
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #071D2B;
+        overflow: hidden;
+        position: relative;
+        touch-action: none;
+        -ms-touch-action: none;
+
+        -webkit-touch-callout: none !important;                 
+        -webkit-text-size-adjust: none !important;              
+        -webkit-user-select: none !important;                   
+    }
+</style>
+<body>
+    <div id="game">
+        <script src="https://7215292-239363040786649989.preview.editmysite.com/uploads/b/150529967-209305792643502816/files/js/ms.js"></script>
+    </div>
+    <div id="wrongRotation" style="	display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 15; background-color: #071D2B; touch-action: none;">
+        <img src="https://7215292-239363040786649989.preview.editmysite.com/uploads/b/150529967-209305792643502816/files/assets/gfx/rotate_screen.png" alt=""/>
+    </div>
+    <div class="font_preload" style="opacity: 0">
+        <span style="font-family: 'gameFont', 'Arial', normal;"></span>
+    </div>
+    <div id="ads"></div>
+	<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+</html>

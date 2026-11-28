@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <style>
+        html { box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+        html, body { height: 100%; }
+        canvas { display: block; }
+        body { margin: 0; }
+        #unity-container { width: 100%; height: 100%; position: relative; }
+        #unity-canvas { width: 100%; height: 100%; background: #231F20; }
+        #loading-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        #unity-loading-bar { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #unity-logo { text-align: center; }
+        #unity-logo img { max-width: 80%; max-height: 80%; }
+        #unity-progress-bar-empty { width: 40%; height: 24px; margin: 10px 20px 20px 10px; text-align: left; border: 1px solid white; padding: 2px; display: block; }
+        #unity-progress-bar-full { width: 0; height: 100%; background: white; }
+        .light #unity-progress-bar-empty { border-color: black; }
+        .light #unity-progress-bar-full { background: black; }
+    </style>
+</head>
+<body>
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas"></canvas>
+    </div>
+    <div id="loading-cover">
+        <div id="unity-loading-bar">
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    async function mergeUnityWebFilesWithProgress(baseUrl, filePrefix, totalParts, extension) {
+        const partUrls = [];
+        for (let i = 1; i <= totalParts; i++) {
+            partUrls.push(`${baseUrl}/${filePrefix}${i}.${extension}`);
+        }
+
+        const buffers = [];
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+
+        let totalDownloaded = 0;
+        let totalSize = 0;
+
+        for (let i = 0; i < totalParts; i++) {
+            const response = await fetch(partUrls[i], { method: "HEAD" });
+            const contentLength = response.headers.get("Content-Length");
+            if (contentLength) {
+                totalSize += parseInt(contentLength, 10);
+            } else {
+                console.warn(`: ${partUrls[i]}`);
+            }
+        }
+
+        for (let i = 0; i < totalParts; i++) {
+            const response = await fetch(partUrls[i]);
+            if (!response.body) {
+                throw new Error(`Streaming not supported for file: ${partUrls[i]}`);
+            }
+
+            const reader = response.body.getReader();
+            const contentLength = response.headers.get("Content-Length");
+            const partBuffer = [];
+            let partDownloaded = 0;
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                partBuffer.push(value);
+                partDownloaded += value.length;
+                totalDownloaded += value.length;
+
+                const progress = (totalDownloaded / totalSize) * 100;
+                progressBarFull.style.width = `${progress}%`;
+            }
+
+            buffers.push(new Uint8Array(partBuffer.reduce((acc, chunk) => acc + chunk.length, 0)));
+            let offset = 0;
+            for (const chunk of partBuffer) {
+                buffers[i].set(chunk, offset);
+                offset += chunk.length;
+            }
+        }
+
+        const totalLength = buffers.reduce((acc, buffer) => acc + buffer.byteLength, 0);
+        const combinedBuffer = new Uint8Array(totalLength);
+        let offset = 0;
+
+        buffers.forEach((buffer) => {
+            combinedBuffer.set(new Uint8Array(buffer), offset);
+            offset += buffer.byteLength;
+        });
+
+        return combinedBuffer;
+    }
+
+    async function initializeGame() {
+        const baseUrl = "https://cdn.jsdelivr.net/gh/mind4ur/Grid@e427100c67f90d318372a322367b94e43f436f8b/code";
+        const loaderUrl = "https://cdn.jsdelivr.net/gh/mind4ur/Grid@e427100c67f90d318372a322367b94e43f436f8b/code/fmr.loader.js";
+
+        try {
+
+            const dataBuffer = await mergeUnityWebFilesWithProgress(baseUrl, "fmr", 2, "js");
+
+            const dataBlobUrl = URL.createObjectURL(new Blob([dataBuffer], { type: "application/octet-stream" }));
+
+            const config = {
+                dataUrl: dataBlobUrl,
+                frameworkUrl: baseUrl + "/fmr.framework.js",
+                codeUrl: baseUrl + "/fmr.js",
+                streamingAssetsUrl: "/StreamingAssets",
+            };
+
+            const canvas = document.querySelector("#unity-canvas");
+            const loadingCover = document.querySelector("#loading-cover");
+            const progressBarFull = document.querySelector("#unity-progress-bar-full");
+
+            const script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+                createUnityInstance(canvas, config, (progress) => {
+                    progressBarFull.style.width = `${100 * progress}%`;
+                }).then(() => {
+                    loadingCover.style.display = "none";
+                });
+            };
+            document.body.appendChild(script);
+        } catch (error) {
+            console.error("Game initialization failed:", error);
+        }
+    }
+
+    initializeGame();
+</script>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+</html>

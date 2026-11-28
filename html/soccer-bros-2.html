@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+    <script type="text/javascript">window.SDK_OPTIONS={gameId:"r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",onEvent:function(a){switch(a.name){case"SDK_GAME_PAUSE":break;case"SDK_GAME_START":break;case"SDK_READY":break}}};(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-sdk");</script><script type="text/javascript">let isAdShown=false;function onClick(e){if(!isAdShown&&typeof sdk!=='undefined'&&typeof sdk.showBanner==='function'){sdk.showBanner();isAdShown=true}window.removeEventListener("click",onClick);window.removeEventListener("touchstart",onClick)}window.addEventListener("click",onClick);window.addEventListener("touchstart",onClick);</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/SoccerBros.js?th=102"></script>
+    <script>
+        window.addEventListener("touchmove", function (event) { event.preventDefault(); }, { capture: false, passive: false });
+        if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+            var meta = document.getElementById("viewport");
+            meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+        }
+        window.addEventListener('keydown', function(e) {
+            var tag = e.target.tagName;
+            if (tag !== 'INPUT' && tag !== 'TEXTAREA') { e.preventDefault(); }
+        });
+
+        const originalGetElementById = document.getElementById.bind(document);
+        document.getElementById = function(id) {
+            let el = originalGetElementById(id);
+            if (!el) {
+
+                el = document.createElement('div');
+                el.id = id;
+            }
+            return el;
+        };
+
+        var aCo = "";
+        var gAdBlock = false;
+        var lastUnitPlayed = "none";
+        var scrollerMessage = "   WELCOME TO SOCCER BROS 2!";
+        var adPrefix = "soccerbros-gg";
+        var prerollId = "soccerbros_preroll";
+        var ascSlotSizes = {};
+        var ascDivCache = {};
+        var adRefreshStates = {};
+        var msAdID;
+
+        var pbjs = window.pbjs || {};
+        pbjs.que = pbjs.que || [];
+        window.pbjs = pbjs;
+        window.ascAds = false;
+    </script>
+
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; background: #000000; width: 100vw; height: 100vh; overflow: hidden; }
+        #openfl-content { background: #000000; width: 100%; height: 100%; }
+        #loading { position: absolute; z-index: 15; top: 60%; left: 50%; transform: translate(-50%, 0); background: black; }
+    </style>
+
+    <script>
+        var userData = "";
+        function triggerSignIn() {}
+        function saveGameData(gameDataValue) { userData = gameDataValue; }
+        function loadGameData() { return userData; }
+        function loadGameDataAsync() { if (typeof Main != "undefined") Main.LoadDataComplete(); }
+        function signOut() { if (typeof Main != "undefined") Main.SignOutComplete(); }
+        function isUserLoggedIn() { return false; }
+
+        function LoadVideo() {}
+        function ShowVideo(theUnitName) { if (typeof Main !== 'undefined') Main.DoneVideoAd(); }
+        function ShowAd1() {} function ShowAd2() {} function ShowAd3() {}
+        function ShowAd4() {} function ShowAd6() {} function ShowAd7() {}
+        function ShowAd8() {} function ShowAd9() {}
+        function ShowAdBreak() { if (typeof Main !== 'undefined') Main.DoneInterstitialAd(true); }
+        function HideAllAds() {}
+        function AscManageAdSizes(shouldHide) {}
+        function ShowAscAd(divName, theX, theY, xAlign, yAlign, doRefresh) {}
+        function HideAscAd(divName, justClear) {}
+        function SendEvent(theEvent, theAction, theParms) {}
+        function GamePlayStart() {}
+        function GamePlayStop() {}
+        function HappyTime() {}
+        function EmailSignup() {}
+        function SetCGInviteLink() {}
+    </script>
+</head>
+<body style="overflow:hidden;">
+    <noscript>Enable JavaScript bro!</noscript>
+
+    <script>
+        var url = window.location.href;
+        if(url.includes("www.")) {
+            url = url.replace("www.","");
+            var f = document.createElement('form'); f.action=url; f.method='POST';
+            var i = document.createElement('input'); i.type='hidden'; i.name='FGlobals'; i.value=localStorage.getItem("/:Globals");
+            f.appendChild(i); document.body.appendChild(f); f.submit();
+        } else {
+            var aPost = ""; var aStorage = localStorage.getItem("/:Globals"); var aLen = 0;
+            if(aStorage != null && aStorage.length > 0) { aLen = aStorage.length; }
+            if(aPost.length > aLen) localStorage.setItem("/:Globals", aPost);
+            if(aPost.length > 0 && aPost.length == aLen) localStorage.setItem("/:Globals", aPost);
+        }
+    </script>
+
+    <div id="loading">
+        <center>
+            <img src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/assets/loading4.png"><br/>
+            <img src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/assets/fbro.png">
+            <img src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/assets/bbbro.png">
+            <img src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/assets/sbro.png">
+            <img src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/assets/wbro.png">
+            <img src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/assets/kbro.png">
+            <img src="https://cdn.jsdelivr.net/gh/brodeliver/sb@3/assets/bbro.png">
+        </center>
+    </div>
+
+    <div id="game2" style="width: 100%; height: 100%;">
+        <div id="openfl-content" onblur="window.focus();" style="width: 100%; height: 100%; float:left;">
+            <script type="text/javascript">
+                lime.embed("SoccerBros", "openfl-content", 0, 0, { parameters: {} });
+            </script>
+        </div>
+    </div>
+
+    <script>
+        const element = document.getElementById('openfl-content');
+        element.addEventListener("wheel", function(event) { window.scroll(0, window.scrollY + event.deltaY); });
+        function keepFocus() { element.focus(); }
+        element.addEventListener('blur', keepFocus);
+        element.addEventListener('focusout', keepFocus);
+
+        setInterval(function () {
+            if (document.activeElement && document.activeElement.tagName == "IFRAME") {
+                document.activeElement.blur();
+                element.focus();
+            }
+        }, 30);
+    </script>
+</body>
+</html>

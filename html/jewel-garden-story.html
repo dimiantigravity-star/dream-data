@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1, IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
+		<title>Jewel Garden Story</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+        <style type="text/css">
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                /*background-color: #000000;*/
+                transition: background-color 140ms ease-in-out;
+
+                overflow: hidden;
+                position: relative;
+                touch-action: none;
+                -ms-touch-action: none;
+
+                -webkit-touch-callout: none !important;                /* prevent callout to copy image, etc when tap to hold */
+                -webkit-text-size-adjust: none !important;             /* prevent webkit from resizing text to fit */
+                -webkit-user-select: none !important;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+            }
+
+            #bg-image {
+                /* The image used */
+                /*background-image: url('assets/gfx/levels/desert_level_fin.png');*/
+                background-color: 	#000000;
+
+                transition: background-color 140ms ease-in-out;
+                /* Add the blur effect */
+                /*filter: blur(8px);*/
+                /*-webkit-filter: blur(8px);*/
+
+                -webkit-filter: blur(5px);
+                -moz-filter: blur(5px);
+                -o-filter: blur(5px);
+                -ms-filter: blur(5px);
+                filter: blur(20px) brightness(100%);
+                transform: scale(1.1);
+
+                /* Full height */
+                height: 100%;
+
+                /* Center and scale the image nicely */
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+
+                /* Position the background behind other content */
+                position: absolute;
+                z-index: -1; /* Ensure the background is behind other content */
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+                /* Ensure the background starts at the border edge */
+                background-origin: border-box;
+            }
+
+            #wrongRotation {
+                display: none;
+                z-index: 20;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 1);
+                touch-action: none;
+            }
+            #wrongRotation img {
+                display: block;
+                width: 30%;
+                margin-left: auto;
+                margin-right: auto;
+                position: relative;
+                top: 45%;
+                -webkit-transform: translateY(-50%);
+                -ms-transform: translateY(-50%);
+                transform: translateY(-50%);
+                touch-action: none;
+            }
+
+            @font-face {
+                font-family: 'Coiny';
+                font-style: normal;
+                font-weight: 400;
+                src: url('https://4003576-263936953800025521.preview.editmysite.com/uploads/b/150363421-985518276875225984/files/assets/fnt/Coiny-Regular.woff2') format('opentype');
+            }
+
+            @font-face {
+                font-family: 'Mulish';
+                font-style: normal;
+                font-weight: 400;
+                src: url('https://4003576-263936953800025521.preview.editmysite.com/uploads/b/150363421-985518276875225984/files/assets/fnt/Mulish-Bold.woff2') format('truetype');
+            }
+        </style>
+        <script src="https://4003576-263936953800025521.preview.editmysite.com/uploads/b/150363421-985518276875225984/files/js/jgs.js"></script>
+
+</head>
+    <body>
+        <div id="bg-image"></div>
+        <div id="game"></div>
+        <div id="wrongRotation">
+            <img src="https://4003576-263936953800025521.preview.editmysite.com/uploads/b/150363421-985518276875225984/files/assets/img/rotate_screen.png" alt="" touch-action="none"/>
+        </div>
+        <div class="font_preload" style="opacity: 0">
+            <span style="font-family: 'Coiny', Arial, sans-serif;"></span>
+            <span style="font-family: 'Mulish', Arial, sans-serif;"></span>
+        </div>
+        <div id="ads"></div>
+		<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+    </body>
+</html>

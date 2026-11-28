@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cliff Diving</title>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+    <link rel="stylesheet" href="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/css/reset.css" type="text/css">
+    <link rel="stylesheet" href="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/css/main.css" type="text/css">
+    <link rel="stylesheet" href="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/css/orientation_utils.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <script type="text/javascript" src="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/js/createjs.min.js"></script>
+    <script type="text/javascript" src="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/js/howler.min.js"></script>
+    <script type="text/javascript" src="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/js/Box2D.min.js"></script>
+    <script type="text/javascript" src="https://131848426-735294402326743839.preview.editmysite.com/uploads/b/148503416-491581634524670327/files/js/main.js"></script>
+</head>
+<body ondragstart="return false;" ondrop="return false;">
+    <div style="position: fixed; background-color: transparent; top: 0px; left: 0px; width: 100%; height: 100%"></div>
+    <script>
+        $(document).ready(function () {
+
+
+            var oMain = new CMain({
+                dive_value: 1, 
+                dive_value_good: 3, 
+                dive_value_perfect: 5, 
+                dive_offset_perfect: 20, 
+                dive_offset_good: 40, 
+                dive_offset_poor: 60, 
+                flip_value: 5, 
+                plane_wait_time: 20000, 
+                plane_speed: 10000, 
+                fullscreen: true, 
+                check_orientation: true 
+
+            });
+            $("#canvas").on("start_session", function (evt) {
+
+            });
+
+            $("#canvas").on("end_session", function (evt) {
+
+            });
+
+            $("#canvas").on("start_level", function (evt, iLevel) {
+
+            });
+
+            $("#canvas").on("restart_level", function (evt, iLevel) {
+
+            });
+
+            $("#canvas").on("end_level", function (evt, iLevel) {
+
+            });
+
+            $("#canvas").on("save_score", function (evt, iScore, szMode) {
+
+            });
+
+            $("#canvas").on("show_interlevel_ad", function (evt) {
+                
+                showBanner();
+            });
+
+            $("#canvas").on("share_event", function (evt, iScore) {
+
+            });
+
+            if (isIOS()) {
+                setTimeout(function () {
+                    sizeHandler();
+                }, 200);
+            } else {
+                sizeHandler();
+            }
+
+
+        });
+
+        var adTriggerCount = 0;
+
+        function showBanner() {
+            if (typeof sdk !=='undefined' && sdk.showBanner !=='undefined') {
+                sdk.showBanner();
+            }
+
+            
+            
+            
+
+            
+            
+            
+            
+            
+        }
+    </script>
+    <div class="check-fonts">
+        <p class="check-font-1">test 1</p>
+    </div>
+    <canvas id="canvas" class='ani_hack' width="980" height="1400"> </canvas>
+    <div data-orientation="portrait" class="orientation-msg-container">
+        <p class="orientation-msg-text">Please rotate your device</p>
+    </div>
+    <div id="block_game"
+        style="position: fixed; background-color: transparent; top: 0px; left: 0px; width: 100%; height: 100%; display:none">
+    </div>
+	<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="en-us"><head><meta charset="utf-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style>body,html{width:100%;height:100%;padding:0;margin:0}.fullscreen-canvas{background:#242424;width:100%;height:100%;position:absolute;top:0;left:0}</style>
+
+
+
+<script type="text/javascript">
+
+
+
+window._uCtx = []; const _OAC = window.AudioContext || window.webkitAudioContext; if (_OAC) { window.AudioContext = function() { let c = new _OAC(); window._uCtx.push(c); return c; }; window.webkitAudioContext = window.AudioContext; }
+
+
+
+window.pgAdsCallbacks = window.pgAdsCallbacks || [];
+
+window.pgAdsCallbacks.push(async () => {
+
+    try {
+
+        await window.pgAds.init({ 
+
+            gameId: 'geometry-vibes-2-online' 
+
+        });
+
+
+
+        if (typeof window.pgAds.updateTargeting === 'function') {
+
+            window.pgAds.updateTargeting({ 
+
+                hru: 'geometry-vibes-2-online', 
+
+                page: 'export-game-page', 
+
+                provider: 'playgama'
+
+            });
+
+        }
+
+    } catch(e) {}
+
+});
+
+let lastInterstitialTime = 0;
+
+const COOLDOWN_MS = 2 * 60 * 1000;
+
+const origLog = window.console.log;
+
+window._forceCloseRewardedAd = null;
+
+window.console.log = function() {
+
+    origLog.apply(this, arguments);
+
+    let foundComplete = false;
+
+    let foundError = false;
+
+    for (let i = 0; i < arguments.length; i++) {
+
+        if (typeof arguments[i] === 'string') {
+
+            if (arguments[i].includes('allAdsCompleted') || arguments[i].includes('complete')) {
+
+                foundComplete = true;
+
+            } 
+
+            else if (arguments[i].includes('AdsLoader error') || arguments[i].includes('adError') || arguments[i].includes('AD_ERROR') || arguments[i].includes('501')) {
+
+                foundError = true;
+
+            }
+
+        }
+
+    }
+
+    if (foundComplete && typeof window._forceCloseRewardedAd === 'function') {
+
+        let closer = window._forceCloseRewardedAd;
+
+        window._forceCloseRewardedAd = null; 
+
+        setTimeout(() => closer(true), 500); 
+
+    }
+
+    if (foundError) {
+
+        if (typeof window._forceCloseRewardedAd === 'function') {
+
+            let closer = window._forceCloseRewardedAd;
+
+            window._forceCloseRewardedAd = null;
+
+            setTimeout(() => closer(false), 500); 
+
+        }
+
+        setTimeout(() => {
+
+            window.focus(); 
+
+            let cvs = document.querySelector('canvas'); 
+
+            if(cvs) cvs.focus();
+
+        }, 100);
+
+    }
+
+};
+
+const _origPostMessage = window.postMessage;
+
+window.postMessage = function(message, targetOrigin, transfer) {
+
+    let isStr = typeof message === 'string';
+
+    let d;
+
+    if (isStr) {
+
+        if (message.indexOf('"source":"GameEvents"') === -1) return _origPostMessage.apply(this, arguments);
+
+        try { d = JSON.parse(message); } catch(e) {}
+
+    } else if (typeof message === 'object' && message && message.source === 'GameEvents') { d = message; }
+
+    if (!d || d.source !== 'GameEvents' || d.responseToId) return _origPostMessage.apply(this, arguments);
+
+    const replySystem = (payload, actionOverride) => {
+
+        let res = { source: 'GameEvents', responseToId: d.id, type: d.type, action: actionOverride || d.action, payload: payload || {} };
+
+        setTimeout(() => _origPostMessage.call(window, isStr ? JSON.stringify(res) : res, '*'), 10);
+
+    };
+
+    if (d.type === 'adv') {
+
+if (d.action === 'showInterstitial') {
+
+            let now = Date.now();
+
+            let ev = 'OnInterstitialStateChanged';
+
+            replySystem({ status: 'start' }, d.action);
+
+            replySystem({ status: 'start', adType: 'interstitial' }, 'adStateChanged');
+
+            if (now - lastInterstitialTime < COOLDOWN_MS) {
+
+                if (typeof window.sendMessageToUnity === 'function') {
+
+                    window.sendMessageToUnity(ev, 'opened');
+
+                    setTimeout(() => window.sendMessageToUnity(ev, 'closed'), 50);
+
+                }
+
+                setTimeout(() => {
+
+                    replySystem({ status: 'close' }, d.action);
+
+                    replySystem({ status: 'close', adType: 'interstitial' }, 'adStateChanged');
+
+                }, 100);
+
+                return;
+
+            }
+
+            lastInterstitialTime = now;
+
+            if (typeof window.sendMessageToUnity === 'function') window.sendMessageToUnity(ev, 'opened');
+
+            try { window._uCtx.forEach(c => { c._r = c.resume; c.suspend(); c.resume = () => Promise.resolve(); }); } catch(e){}
+
+            const closeInterstitial = () => {
+
+                window._forceCloseRewardedAd = null; 
+
+                if (typeof window.sendMessageToUnity === 'function') {
+
+                    window.sendMessageToUnity(ev, 'closed'); 
+
+                }
+
+                try { window._uCtx.forEach(c => { if(c._r) c.resume = c._r; c.resume(); }); } catch(e){}
+
+                setTimeout(() => {
+
+                    replySystem({ status: 'close' }, d.action);
+
+                    replySystem({ status: 'close', adType: 'interstitial' }, 'adStateChanged');
+
+                }, 100);
+
+                window.focus(); let cvs = document.querySelector('canvas'); if(cvs) cvs.focus();
+
+            };
+
+            if (window.pgAds) {
+
+                window.pgAds.requestOutOfPageAd('interstitial').then(b => {
+
+                    let isDone = false;
+
+                    const handleClose = () => {
+
+                        if (!isDone) {
+
+                            isDone = true;
+
+                            closeInterstitial();
+
+                        }
+
+                    };
+
+                    window._forceCloseRewardedAd = handleClose;
+
+                    ['closed', 'error'].forEach(e => b.addEventListener(e, handleClose));
+
+
+
+                    if (b.state === 'ready') {
+
+                        b.show();
+
+                    } else if (b.state === 'empty') {
+
+                        handleClose();
+
+                    } else {
+
+                        b.addEventListener('ready', () => b.show());
+
+                        b.addEventListener('empty', handleClose);
+
+                        setTimeout(() => { if (!isDone && b.state === 'loading') handleClose(); }, 12000);
+
+                    }
+
+                }).catch(() => closeInterstitial());
+
+            } else { closeInterstitial(); }
+
+            return;
+
+        }
+
+                if (d.action === 'showRewarded') {
+
+            let ev = 'OnRewardedStateChanged';
+
+            replySystem({ status: 'start' }, d.action);
+
+            replySystem({ status: 'start', adType: 'rewarded' }, 'adStateChanged');
+
+            if (typeof window.sendMessageToUnity === 'function') window.sendMessageToUnity(ev, 'opened');
+
+            try { window._uCtx.forEach(c => { c._r = c.resume; c.suspend(); c.resume = () => Promise.resolve(); }); } catch(e){}
+
+            const closeReward = (isSuccess) => {
+
+                window._forceCloseRewardedAd = null; 
+
+                if (typeof window.sendMessageToUnity === 'function') {
+
+                    if (isSuccess) window.sendMessageToUnity(ev, 'rewarded'); 
+
+                    setTimeout(() => window.sendMessageToUnity(ev, 'closed'), 50); 
+
+                }
+
+                try { window._uCtx.forEach(c => { if(c._r) c.resume = c._r; c.resume(); }); } catch(e){}
+
+                setTimeout(() => {
+
+                    replySystem({ status: 'close' }, d.action);
+
+                    replySystem({ status: 'close', adType: 'rewarded' }, 'adStateChanged');
+
+                }, 100);
+
+                window.focus(); let cvs = document.querySelector('canvas'); if(cvs) cvs.focus();
+
+            };
+
+            if (window.pgAds) {
+
+                window.pgAds.requestOutOfPageAd('rewarded').then(b => {
+
+                    let isRew = false;
+
+                    let isDone = false;
+
+                    
+
+                    b.addEventListener('rewarded', () => { isRew = true; });
+
+                    
+
+                    const handleClose = (forceSuccess) => {
+
+                        if (!isDone) {
+
+                            isDone = true;
+
+                            closeReward(isRew || forceSuccess === true);
+
+                        }
+
+                    };
+
+                    window._forceCloseRewardedAd = handleClose;
+
+                    
+
+                    ['closed', 'error'].forEach(e => b.addEventListener(e, handleClose));
+
+
+
+                    if (b.state === 'ready') {
+
+                        b.show();
+
+                    } else if (b.state === 'empty') {
+
+                        handleClose(false);
+
+                    } else {
+
+                        b.addEventListener('ready', () => b.show());
+
+                        b.addEventListener('empty', () => handleClose(false));
+
+                        setTimeout(() => { if (!isDone && b.state === 'loading') handleClose(false); }, 12000);
+
+                    }
+
+                }).catch(() => closeReward(false));
+
+            } else { closeReward(false); }
+
+            return;
+
+        }
+
+        if (d.action === 'preloadInterstitial' || d.action === 'preloadRewarded') { replySystem({ status: 'close' }, d.action); return; }
+
+        return;
+
+    }
+
+                if (d.type === 'storage') { if (d.action === 'getState') replySystem({ state: {} }); return; }
+
+                if (d.type === 'liveness' && d.action === 'ping') { replySystem({ enableStorage: false }, 'pong'); return; }
+
+                if (d.type === 'platform' && d.action === 'getPlatformInfo') { replySystem({ language: 'en', isPaymentsSupported: false }); return; }
+
+                if (d.type === 'user') { replySystem({ isAuthorized: false }); return; }
+
+                if (d.type === 'cloud-save') { if (d.action === 'getCloudSaveState') replySystem({ state: {} }); else replySystem({ success: true }); return; }
+
+                if (d.type === 'game') { replySystem({ success: true }); return; }
+
+    return _origPostMessage.apply(this, arguments);
+
+};
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/gh/bobydob/3@main/v0.5.js?clid=p_91b93ebb-8816-448f-bde9-a6112334d6cd"></script>
+
+</head>
+
+<body>
+
+<div id="app"></div>
+
+<canvas id="canvas" class="fullscreen-canvas"></canvas>
+
+<script src="https://google.com/stand.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/Safgiy/reactapp@82cc32bd3d4903d24cb62734fda57857d4113725/pub/section.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Flippy Bottle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+<link rel="stylesheet" href="https://1818572-245132184936163237.preview.editmysite.com/uploads/b/153045438-672148826156173289/files/style.css" type="text/css">
+</head>
+<body>
+<div id="fb-root"></div>
+	<noscript>
+		<div id="notSupportedWrap">
+			<h2 id="notSupportedTitle">This content requires JavaScript</h2>
+			<p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
+		</div>
+	</noscript>
+	<script src="https://1818572-245132184936163237.preview.editmysite.com/uploads/b/153045438-672148826156173289/files/scripts/supportcheck.js"></script>
+	<script src="https://1818572-245132184936163237.preview.editmysite.com/uploads/b/153045438-672148826156173289/files/scripts/offlineclient.js"></script>
+	<script src="https://1818572-245132184936163237.preview.editmysite.com/uploads/b/153045438-672148826156173289/files/scripts/main.js"></script>
+	<script src="https://1818572-245132184936163237.preview.editmysite.com/uploads/b/153045438-672148826156173289/files/scripts/register-sw.js"></script>
+	<script type ="text/javascript" >
+	window.SDK_OPTIONS = {
+	      gameId: "5le61yhp4nbwqkdcaj8l6vla40sho0ju",
+	      onEvent: function (a) {
+	         switch (a.name) {
+	            case "SDK_GAME_PAUSE":
+	               window.showad = 1;
+	               break;
+	            case "SDK_GAME_START":
+	               window.showad = 0;
+	               break;
+	            case "SDK_READY":
+	               // when sdk is ready
+	               break;
+	         }
+	      }
+	   };
+	(function (a, b, c) {
+	   var d = a.getElementsByTagName(b)[0];
+	   a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src ="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdk.js", d.parentNode.insertBefore(a, d))
+	})(document, "script", "gamemonetize-sdk");  
+
+	function showAd() 
+	{
+
+		if (typeof sdk !=='undefined' && sdk.showBanner !=='undefined') 
+			sdk.showBanner();
+		else
+			window.showad = 0;
+	}
+
+	function GetAdState()
+	{
+		return window.showad;
+	}
+</script>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+</html>

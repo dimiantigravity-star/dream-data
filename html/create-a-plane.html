@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<style>html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}html,body{height:100%}canvas{display:block}body{margin:0}#unity-container{width:100%;height:100%;position:relative}#unity-canvas{width:100%;height:100%;background:#231F20}#loading-cover{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center}#unity-loading-bar{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;align-items:center}#unity-logo{text-align:center}#unity-logo img{max-width:80%;max-height:80%}#unity-progress-bar-empty{width:40%;height:24px;margin:10px 20px 20px 10px;text-align:left;border:1px solid white;padding:2px}#unity-progress-bar-full{width:0;height:100%;background:white}.light #unity-progress-bar-empty{border-color:black}.light #unity-progress-bar-full{background:black}.spinner,.spinner:after{border-radius:50%;width:5em;height:5em}.spinner{margin:10px;font-size:10px;position:relative;text-indent:-9999em;border-top:1.1em solid rgba(255,255,255,0.2);border-right:1.1em solid rgba(255,255,255,0.2);border-bottom:1.1em solid rgba(255,255,255,0.2);border-left:1.1em solid #ffffff;transform:translateZ(0);animation:spinner-spin 1.1s infinite linear}@keyframes spinner-spin{0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)}}</style>
+<style> body{overflow:hidden;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}</style>
+<script>
+(function(){
+  const DEBUG = false;
+  if (DEBUG) return;
+
+  const originalConsole = window.console || {};
+  const methods = ["log","info","warn","error","debug","trace","group","groupCollapsed","groupEnd","table","time","timeEnd","timeLog","timeStamp"];
+  const noop = function(){};
+  const silent = {};
+  methods.forEach(m => silent[m] = noop);
+  window.console = Object.assign({}, originalConsole, silent);
+
+  window.__restoreConsole = function(){ window.console = originalConsole; };
+  window.__silentConsole  = function(){ window.console = Object.assign({}, originalConsole, silent); };
+
+  window.Module = window.Module || {};
+  window.Module.print    = noop;
+  window.Module.printErr = noop;
+
+  window.addEventListener('error', function(e){
+    try { e.preventDefault(); } catch {}
+    return true; 
+  }, true);
+  window.onerror = function(){ return true; };
+
+  window.addEventListener('unhandledrejection', function(e){
+    try { e.preventDefault(); } catch {}
+  });
+})();
+</script><script>
+  window.__gmReady = false;
+  window.__gmAdActive = false;
+  window.__gmPendingRewardId = null;
+
+  window.SDK_OPTIONS = {
+    gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
+    onEvent: function(ev){
+      switch(ev.name){
+        case "SDK_READY":
+          window.__gmReady = true;
+          break;
+
+        case "SDK_GAME_PAUSE":
+          window.__gmAdActive = true;
+          try { sendYG && sendYG('OpenFullAd'); } catch {}
+          try { sendYG && sendYG('OnVisibilityGameWindow', 'false'); } catch {}
+          try { pauseLoop && pauseLoop(); } catch {}
+          try { lockAndMuteAudio && lockAndMuteAudio(); } catch {}
+          break;
+
+        case "SDK_GAME_START":
+          window.__gmAdActive = false;
+          try { sendYG && sendYG('CloseFullAd', 'true'); } catch {}
+          try { sendYG && sendYG('OnVisibilityGameWindow', 'true'); } catch {}
+          try { resumeLoop && resumeLoop(); } catch {}
+          Promise.resolve().then(async ()=>{
+            try { await unlockAndUnmuteAudio(); } catch {}
+            try { ensureCanvasFocus && ensureCanvasFocus(4,100); } catch {}
+          });
+
+          if (window.__gmPendingRewardId != null){
+            const id = window.__gmPendingRewardId; window.__gmPendingRewardId = null;
+            try { sendYG && sendYG('OpenVideo'); } catch {}
+            try { sendYG && sendYG('RewardVideo', id); } catch {}
+            try { sendYG && sendYG('CloseVideo','true'); } catch {}
+          }
+          break;
+      }
+    }
+  };
+
+  (function(d,s,id){
+    var p = d.getElementsByTagName(s)[0];
+    if (!d.getElementById(id)) {
+      var js = d.createElement(s); js.id = id;
+      js.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js";
+      p.parentNode.insertBefore(js, p);
+    }
+  })(document,"script","gamemonetize-sdk");
+</script>
+</head>
+<body class="dark">
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas"></canvas>
+</div>
+<div id="loading-cover" style="display:none;">
+<div id="unity-loading-bar">
+<div id="unity-progress-bar-empty" style="display: none;">
+<div id="unity-progress-bar-full"></div>
+</div>
+<div class="spinner"></div>
+</div>
+</div>
+
+
+<script>
+  const hideFullScreenButton = "";
+  const buildUrl  = "https://googleusercontent.b-cdn.net/create-a-plane";
+  const loaderUrl = buildUrl + "/loader.js";
+  const config = {
+    dataUrl: buildUrl + "/cap.data.br",
+    frameworkUrl: buildUrl + "/cap.framework.br",
+    codeUrl: buildUrl + "/cap.wasm.br",
+    streamingAssetsUrl: "StreamingAssets",
+  };
+
+  const container        = document.querySelector("#unity-container");
+  const canvas           = document.querySelector("#unity-canvas");
+  const loadingCover     = document.querySelector("#loading-cover");
+  const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+  const progressBarFull  = document.querySelector("#unity-progress-bar-full");
+  const spinner          = document.querySelector(".spinner");
+
+  (function(){
+    const _alert = window.alert;
+    window.alert = function(msg){
+      const s = String(msg || "");
+      if (s.includes("requestPointerLock") || s.includes("pointer lock")) return;
+      try { return _alert.call(window, msg); } catch {}
+    };
+  })();
+  (function(){
+    const patch = (proto) => {
+      if (!proto || !proto.requestPointerLock) return;
+      const orig = proto.requestPointerLock;
+      Object.defineProperty(proto, 'requestPointerLock', {
+        configurable: true, writable: true,
+        value: function(...args){ try { return orig.apply(this, args); } catch { return; } }
+      });
+    };
+    patch(Element.prototype);
+    if (window.HTMLCanvasElement) patch(HTMLCanvasElement.prototype);
+    const exitPL = document.exitPointerLock || document.webkitExitPointerLock || document.mozExitPointerLock;
+    if (exitPL) document.exitPointerLock = function(...a){ try { return exitPL.apply(document, a); } catch{} };
+    try { Object.defineProperty(document, 'pointerLockElement', { get: () => null, configurable: true }); } catch {}
+  })();
+  window.addEventListener('unhandledrejection', (ev) => {
+    const s = String(ev?.reason || ""); if (s.includes("requestPointerLock") || s.includes("pointer lock")) ev.preventDefault();
+  });
+  window.addEventListener('error', (ev) => {
+    const s = String(ev?.message || ""); if (s.includes("requestPointerLock") || s.includes("pointer lock")) ev.preventDefault();
+  });
+
+  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) container.className = "unity-mobile";
+  loadingCover.style.display = "";
+  document.addEventListener("contextmenu", e => e.preventDefault());
+
+  try { canvas.setAttribute('tabindex','0'); } catch {}
+  function FocusGame(){ try{ window.focus(); }catch{} try{ canvas.focus({preventScroll:true}); }catch{} }
+  function ensureCanvasFocus(retries=10, delay=120){
+    let n = 0;
+    (function tick(){
+      if (document.activeElement !== canvas) FocusGame();
+      if (++n < retries) setTimeout(tick, delay);
+    })();
+  }
+  window.addEventListener("pointerdown", FocusGame);
+  window.addEventListener("touchstart",  FocusGame);
+
+  function getUnityAudioCtx(){
+    try{
+      const m = myGameInstance && myGameInstance.Module;
+      const ctx = (m && (m.SDL?.audioContext || m.SDL2?.audioContext || m.webAudioContext)) || window.__unityAudioCtx || null;
+      if (ctx) window.__unityAudioCtx = ctx;
+      return ctx || null;
+    }catch{ return null; }
+  }
+  async function muteUnityAudio(){
+    try { const ctx = getUnityAudioCtx(); if (ctx && ctx.state !== 'suspended') await ctx.suspend(); } catch {}
+  }
+  async function unmuteUnityAudio(){
+    try { const ctx = getUnityAudioCtx(); if (ctx && ctx.state !== 'running') await ctx.resume(); } catch {}
+  }
+  function pauseLoop(){ try{ myGameInstance?.Module?.pauseMainLoop?.(); }catch{} }
+  function resumeLoop(){ try{ myGameInstance?.Module?.resumeMainLoop?.(); }catch{} }
+
+  let __adAudioLock = false;
+  let __adMuteInterval = null;
+  async function lockAndMuteAudio(){
+    __adAudioLock = true;
+    try { if (__adMuteInterval) clearInterval(__adMuteInterval); } catch {}
+    await muteUnityAudio();
+    __adMuteInterval = setInterval(()=>{ if (__adAudioLock) muteUnityAudio(); }, 150);
+  }
+  async function unlockAndUnmuteAudio(){
+    __adAudioLock = false;
+    try { if (__adMuteInterval) clearInterval(__adMuteInterval); } catch {}
+    __adMuteInterval = null;
+    await unmuteUnityAudio();
+  }
+  window.addEventListener('focus',               ()=>{ if (!__adAudioLock) { unmuteUnityAudio(); ensureCanvasFocus(3,100); } });
+  document.addEventListener('visibilitychange', ()=>{ if (!document.hidden && !__adAudioLock) { unmuteUnityAudio(); ensureCanvasFocus(3,100); }});
+
+  let myGameInstance, StartUnityInstance;
+  let environmentData = 'noData';
+  let cloudSaves   = 'noData';
+  let paymentsData = 'noData';
+  let playerData   = 'noData';
+  let player = null, payments = null, initGame = false, nowFullAdOpen = false;
+  let sdkReady = false, _pendingSave = null;
+  let lastAdTime = 0; function canShowAd(){ return Date.now() - lastAdTime > 30000; }
+
+  const FORCED_LANG = 'en';
+  try {
+    Object.defineProperty(navigator, 'language',  { get: () => 'en-US', configurable: true });
+    Object.defineProperty(navigator, 'languages', { get: () => ['en-US','en'], configurable: true });
+  } catch(e){
+    try { navigator.__defineGetter__('language',  ()=>'en-US'); } catch{}
+    try { navigator.__defineGetter__('languages', ()=>['en-US','en']); } catch{}
+  }
+  try { document.documentElement.lang = 'en'; } catch{}
+
+  window.YaGames = {
+    init: () => Promise.resolve((function(){
+      const isM = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const obj = {
+        environment: { i18n:{ lang:FORCED_LANG, tld:'com' }, app:{ id:'454758' }, browser:{ lang:FORCED_LANG }, payload:null },
+        deviceInfo:  { type:isM?'mobile':'desktop', isMobile:()=>isM, isDesktop:()=>!isM, isTablet:()=>/iPad|Tablet/i.test(navigator.userAgent), isTV:()=>false },
+        screen:      { fullscreen:{ status:'off', request(){ this.status='on'; } } },
+        adv: {
+          showFullscreenAdv({callbacks}={}){ try{ callbacks?.onOpen?.(); }catch{} setTimeout(()=>{ try{ callbacks?.onClose?.(true); }catch{} },300); },
+          showRewardedVideo({callbacks}={}){ try{ callbacks?.onOpen?.(); }catch{} setTimeout(()=>{ try{ callbacks?.onRewarded?.(); callbacks?.onClose?.(); }catch{} },300); }
+        },
+        features: { LoadingAPI: { ready(){} } },
+        serverTime: () => Date.now(),
+        feedback: { canReview:()=>Promise.resolve({ value:false }), requestReview:()=>Promise.resolve({ feedbackSent:false }) },
+        shortcut: { canShowPrompt:()=>Promise.resolve({ canShow:false }), showPrompt:()=>Promise.resolve({ outcome:'dismissed' }) },
+        auth: { openAuthDialog: () => Promise.resolve() },
+        getPlayer: () => Promise.resolve((() => {
+          const APP_KEY = 'yg2_cloud_' + (location.host + location.pathname);
+          let cache; try { cache = JSON.parse(localStorage.getItem(APP_KEY) || '{}'); } catch { cache = {}; }
+          function persist(){ try { localStorage.setItem(APP_KEY, JSON.stringify(cache)); } catch {} }
+          return {
+            isAuthorized:   () => true,
+            getMode:        () => 'full',
+            getName:        () => 'Guest',
+            getPhoto:       () => '',
+            getUniqueID:    () => 'guest_' + (location.host || 'local'),
+            getPayingStatus:() => 'unknown',
+            setData: (obj, flush) => { if (obj && typeof obj === 'object') { cache = { ...cache, ...obj }; if (flush !== false) persist(); } },
+            getData: (keys) => Promise.resolve(Array.isArray(keys)&&keys.length ? keys.reduce((a,k)=>{a[k]=cache[k];return a;}, {}) : { ...cache })
+          };
+        })()),
+        getPayments:     () => Promise.reject(new Error('payments-unavailable')),
+        getLeaderboards: () => Promise.reject(new Error('leaderboards-unavailable')),
+      };
+      window.ysdk = obj; 
+      return obj;
+    })())
+  };
+
+  function sendYG(method, arg){
+    try{
+      if (!myGameInstance) return;
+      arg===undefined
+        ? myGameInstance.SendMessage('YandexGame', method)
+        : myGameInstance.SendMessage('YandexGame', method, String(arg));
+    }catch{}
+  }
+
+  function SaveCloud(jsonData, flush) {
+    if (!player || !sdkReady) { _pendingSave = { jsonData, flush }; return; }
+    try { player.setData({ saves:[jsonData] }, flush); } catch {}
+  }
+  function LoadCloud() {
+    return new Promise((resolve) => {
+      try {
+        if (!player) { cloudSaves = 'noData'; sendYG('SetLoadSaves','noData'); return resolve('noData'); }
+        player.getData(['saves']).then(data => {
+          const res = (data && data.saves) ? JSON.stringify(data.saves) : 'noData';
+          cloudSaves = res; sendYG('SetLoadSaves', res); resolve(res);
+        }).catch(() => { cloudSaves='noData'; sendYG('SetLoadSaves','noData'); resolve('noData'); });
+      } catch { cloudSaves='noData'; sendYG('SetLoadSaves','noData'); resolve('noData'); }
+    });
+  }
+  function InitPayments(){
+    return new Promise((resolve)=>{
+      try{
+        const jsonPayments = {
+          id:['starter_pack','mega_pack'],
+          title:['Starter Pack','Mega Pack'],
+          description:['100k coins + 1.5k crystals','250k coins + 5k crystals'],
+          imageURI:['',''], price:['0.00','0.00'], priceValue:[0,0],
+          priceCurrencyCode:['USD','USD'], currencyImageURL:['',''], consumed:[true,true],
+          language:'en'
+        };
+        paymentsData = JSON.stringify(jsonPayments);
+        sendYG('PaymentsEntries', paymentsData);
+        resolve(paymentsData);
+      }catch(e){
+        paymentsData='noData';
+        sendYG('PaymentsEntries','noData');
+        resolve('noData');
+      }
+    });
+  }
+
+  function FullAdShow() {
+    if (!canShowAd()) { sendYG('CloseFullAd', 'false'); return; }
+    try {
+      if (nowFullAdOpen) return;
+      nowFullAdOpen = true;
+      lastAdTime = Date.now();
+
+      const api = window.sdk || window.GameMonetize || window.GM || window.gmSDK || {};
+      if (typeof api.showInterstitial === 'function') api.showInterstitial(()=>{});
+      else if (typeof api.showAd === 'function')      api.showAd('interstitial', ()=>{});
+      else if (typeof api.showBanner === 'function')  api.showBanner();
+      else { sendYG('ErrorFullAd'); sendYG('CloseFullAd','false'); }
+    } catch (e) {
+      sendYG('ErrorFullAd'); sendYG('CloseFullAd','false');
+    } finally {
+      setTimeout(()=>{ nowFullAdOpen = false; }, 1000);
+    }
+  }
+
+  function RewardedShow(id) {
+    try {
+      window.__gmPendingRewardId = id;
+      const api = window.sdk || window.GameMonetize || window.GM || window.gmSDK || {};
+      if (typeof api.showInterstitial === 'function') api.showInterstitial(()=>{});
+      else if (typeof api.showAd === 'function')      api.showAd('interstitial', ()=>{});
+      else if (typeof api.showBanner === 'function')  api.showBanner();
+      else { sendYG('OpenVideo'); sendYG('RewardVideo', id); sendYG('CloseVideo','true'); }
+    } catch (e) {
+      sendYG('ErrorVideo'); sendYG('CloseVideo','false');
+    }
+  }
+
+  function RequestingEnvironmentData(){
+    const isM = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const json = JSON.stringify({
+      language: 'en', domain: 'com',
+      deviceType: isM?'mobile':'desktop',
+      isMobile:isM, isDesktop:!isM, isTablet:/iPad|Tablet/i.test(navigator.userAgent), isTV:false,
+      appID:'454758', browserLang:'en', payload:null,
+      promptCanShow:false, reviewCanShow:false,
+      platform:navigator.platform, browser:'Other'
+    });
+    environmentData = json;
+    sendYG('SetEnvirData', json);
+    return json;
+  }
+
+  async function InitPlayer(){
+    try{
+      const p = await ysdk.getPlayer(); player = p;
+      const data = JSON.stringify({
+        playerAuth:'resolved',
+        playerName:p.getName(),
+        playerId:p.getUniqueID(),
+        playerPhoto:p.getPhoto('medium') || 'null',
+        payingStatus:p.getPayingStatus()
+      });
+      playerData = data;
+      sendYG('SetInitializationSDK', data);
+      return data;
+    }catch{
+      const data = JSON.stringify({
+        playerAuth:'rejected', playerName:'unauthorized',
+        playerId:'unauthorized', playerPhoto:'null', payingStatus:'unknown'
+      });
+      playerData = data;
+      sendYG('SetInitializationSDK', data);
+      return data;
+    }
+  }
+
+  function YG2Instance(method, arg){   }
+  function Payments() {}
+  function InterAdvShow(){ try{ FullAdShow(); }catch{} }
+  function RewardedAdvShow(id){ try{ RewardedShow(id); }catch{} }
+  function InitReview(){   }
+  function Review(){}
+
+  function SetLeaderboard(name, score, extraData) {
+    try {
+      const key = 'lb_' + String(name || 'default');
+      const val = Number(score) || 0;
+      let best = 0; try { best = Number(localStorage.getItem(key) || '0'); } catch {}
+      if (val > best) { try { localStorage.setItem(key, String(val)); } catch {} }
+    } catch {}
+  }
+  function GetLeaderboard(nameLB, quantityTop, quantityAround, photoSize, auth) {
+    try {
+      const payload = {
+        technoName: String(nameLB || ''), isDefault:false, isInvertSortOrder:false,
+        decimalOffset:0, type:'numeric',
+        entries:'no data', ranks:[], photos:[], names:[], scores:[], uniqueIDs:[], extraDataArray:[]
+      };
+      sendYG('LeaderboardEntries', JSON.stringify(payload));
+    } catch {}
+  }
+
+  window._InitEnvironmentData_js = function(){ try{ RequestingEnvironmentData(); }catch{} };
+  window._InitPlayer_js          = function(){ try{ InitPlayer(); }catch{} };
+  window._LoadCloud_js           = function(){ try{ LoadCloud(); }catch{} };
+  window._InterAdvShow_js        = function(){ try{ InterAdvShow(); }catch{} };
+  window._RewardedAdvShow_js     = function(id){ try{ RewardedAdvShow(id); }catch{} };
+  window._OpenAuthDialog_js      = function(){ try{   }catch{} };
+  window._InitPayments_js        = function(){ try{ InitPayments(); }catch{} };
+
+  (async function(){
+    try{ await window.YaGames.init(); }catch{}
+    RequestingEnvironmentData();
+    await InitPlayer();
+    await LoadCloud();
+    await InitPayments();
+
+    const s = document.createElement("script");
+    s.src = loaderUrl;
+    s.onload = () => {
+      StartUnityInstance = function(){
+        createUnityInstance(canvas, config, (p)=>{
+          spinner.style.display = "none";
+          progressBarEmpty.style.display = "";
+          progressBarFull.style.width = `${100*p}%`;
+        }).then((u)=>{
+          myGameInstance = u;
+          loadingCover.style.display = "none";
+          try { __lbKick(); } catch {}
+          sdkReady = true;
+          if (_pendingSave) { try { player.setData({ saves:[_pendingSave.jsonData] }, _pendingSave.flush); } catch {} _pendingSave = null; }
+
+          try{ sendYG('SetEnvirData', environmentData); }catch{}
+          try{ sendYG('SetInitializationSDK', playerData); }catch{}
+          sendYG('InitSDKComplete');
+
+
+          ensureCanvasFocus(12, 150);
+        }).catch((e)=>{ console.error(e); });
+      };
+      StartUnityInstance();
+    };
+    document.body.appendChild(s);
+  })();
+
+
+
+
+const SLOGAN = ["PLAY", "ON", "CLASS", "ROOM", "6X"];
+
+const USE_GOLD_FILLER = false;
+const START_RANK = 4; 
+
+(function(){
+const NAMES = [
+  'top_money','TopMoney','money','Money',
+  'top_rebirth','TopRebirth','rebirth','Rebirth',
+  'EggsCount'
+];
+
+  function payload(name){
+    const ranks=[], names=[], scores=[], photos=[], ids=[];
+    if (USE_GOLD_FILLER){
+
+      ranks.push(1); names.push('\u200B\u200B\u200B'); scores.push(0); photos.push(''); ids.push('fill');
+    }
+    for (let i=0;i<SLOGAN.length;i++){
+      ranks.push(START_RANK+i);
+      names.push(String(SLOGAN[i]));
+      scores.push(0);
+      photos.push('');
+      ids.push('ad'+i);
+    }
+
+    const entries = names.map((t,i)=>`${ranks[i]}. ${t}: 0`).join('\n');
+
+    return JSON.stringify({
+      technoName:String(name||''),
+      isDefault:false,
+      isInvertSortOrder:false,
+      decimalOffset:0,
+      type:'numeric',
+      entries, ranks, photos, names, scores, uniqueIDs:ids
+    });
+  }
+
+  function send(name){
+    try{
+      if (myGameInstance)
+        myGameInstance.SendMessage('YandexGame','LeaderboardEntries', payload(name));
+    }catch{}
+  }
+
+  window.GetLeaderboard       = function(name){ send(name); };
+  window.GetLeaderboardScores = function(name){ send(name); };
+  window.SetLeaderboard       = function(){};
+  window.SetLeaderboardScores = function(){};
+
+  let started=false;
+  window.__lbKick = function(){
+    if (started) return; started = true;
+    let i=0;
+    const fast = setInterval(()=>{ NAMES.forEach(send); if (++i>12) clearInterval(fast); }, 250);
+    setInterval(()=>{ NAMES.forEach(send); }, 4000);
+  };
+})();
+
+
+  function GetPayments(){ return Promise.resolve(paymentsData || 'noData'); }
+  function BuyPayments(id) {}
+  function ConsumePurchases() {   }
+  function OpenAuthDialog(){   }
+  function InitGame(){ initGame=true; if(window.__gmAdActive) sendYG('OpenFullAd'); }
+  function GameReadyAPI(){}
+</script>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+</html>

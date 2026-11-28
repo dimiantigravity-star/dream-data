@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="user-scalable=no">
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            background-color: #102b07;
+        }
+
+        @font-face {
+            font-family: 'gameFont';
+            font-style: normal;
+            font-weight: 400;
+            src: url('https://cdn.jsdelivr.net/gh/yrgen73/13in1@cfa5076bb6fcd24d2f7e06da50fb81f0bc236c84/assets/fnt/Cantarell-Bold.ttf');
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yrgen73/13in1@cfa5076bb6fcd24d2f7e06da50fb81f0bc236c84/css/normalize.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yrgen73/13in1@cfa5076bb6fcd24d2f7e06da50fb81f0bc236c84/css/game.css" type="text/css">
+
+
+</head>
+<body style="background-color: #000000">
+
+
+<div id="game">
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/yrgen73/13in1@ae88102214e450ae22f62cfe873a19c6961e9b5a/js/13in1.js"></script>
+        
+
+
+    <script>
+        document.addEventListener("deviceready", function () {
+            document.addEventListener("backbutton", function () {
+                
+                if (aboutShowed) {
+                    SceneAbout.instance.cancelAbout();
+                }
+                
+                else if (grpSceneSelectMode.visible && !quitAppActive) {
+                    SceneGame.instance.executeAction(ACTIONS.QUIT_APP);
+                }
+                
+                else if (quitAppActive) {
+                    SceneInfoDialog.instance.OnPressedNo();
+                }
+                
+                else if (infoShowed) {
+                    SceneInstruction.instance.cancelInstruction();
+                }
+                
+                else if (areYouSureActive) {
+                    SceneInfoDialog.instance.OnPressedNo();
+                }
+                
+                else if (grpSceneGame.visible && !grpScenePause.visible) {
+                    if (!dealingCards) {
+                        SceneGame.instance.executeAction(ACTIONS.PAUSE);
+                    }
+                }
+                
+                else if (grpSceneGame.visible && grpScenePause.visible) {
+                    SceneGame.instance.executeAction(ACTIONS.UNPAUSE)
+                }
+            }, false);
+        }, false);
+    </script>
+</div>
+<div class="font_preload" style="opacity: 0">
+    <span style="font-family: 'gameFont', Arial, normal;"></span>
+</div>
+<div id="ads"></div>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+</html>

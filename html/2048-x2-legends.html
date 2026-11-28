@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="user-scalable=no">
+	<title>2048: X2 Legend</title>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+</head>
+<style>
+    @font-face {
+        font-family: 'Murecho';
+        src: url('https://27247109-865546796419095595.preview.editmysite.com/uploads/b/147918137-431030130285004662/files/fonts/Murecho-Regular.woff2');
+    }
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #00034a;
+        overflow: hidden;
+
+        -webkit-touch-callout: none !important;                 
+        -webkit-text-size-adjust: none !important;              
+        -webkit-user-select: none !important;                   
+    }
+    #gameCanvas {
+        background: #000036;
+        z-index: 1;
+        position: relative;
+    }
+</style>
+<body>
+<div style="font-family:Murecho; position: absolute; left:-1000px; visibility:hidden;">.</div>
+<div id="panelLeft" style="position: absolute; display:none;width: 200px;height: 50px;background: url('https://27247109-865546796419095595.preview.editmysite.com/uploads/b/147918137-431030130285004662/files/assets/gfx/farbyl.png')"></div>
+<div id="panelMiddle" style="z-index: 0;position: absolute; display:none;width: 200px;height: 50px;background: #000036"></div>
+<div id="panelRight" style="position: absolute; display:none;width: 200px;height: 50px;background: url('https://27247109-865546796419095595.preview.editmysite.com/uploads/b/147918137-431030130285004662/files/assets/gfx/farbyr.png')"></div>
+    <div id="game">
+    <script src="https://27247109-865546796419095595.preview.editmysite.com/uploads/b/147918137-431030130285004662/files/js/2x2l.js"></script>
+    </div>
+    <div id="wrongRotation" style="	display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 15; touch-action: none;">
+        <img src="https://27247109-865546796419095595.preview.editmysite.com/uploads/b/147918137-431030130285004662/files/assets/gfx/rotate_screen.png" alt=""/>
+    </div>
+    <div id="ads">
+    </div>
+	<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+  <script type="text/javascript">window.SDK_OPTIONS={gameId:"r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",onEvent:function(a){switch(a.name){case"SDK_GAME_PAUSE":break;case"SDK_GAME_START":break;case"SDK_READY":break}}};(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-sdk");</script><script type="text/javascript">let isAdShown=false;function onClick(e){if(!isAdShown&&typeof sdk!=='undefined'&&typeof sdk.showBanner==='function'){sdk.showBanner();isAdShown=true}window.removeEventListener("click",onClick)}window.addEventListener("click",onClick);</script>
+</body>
+</html>

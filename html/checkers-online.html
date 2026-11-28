@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"/>
+    <meta name="theme-color" content="#000000" />
+    <meta http-equiv="Content-Security-Policy" content="
+                        default-src * vkcors: data: blob: ws: wss: gap://ready file://*;
+                        style-src * vkcors: 'unsafe-inline';
+                        script-src * vkcors: 'unsafe-inline' 'unsafe-eval';
+                        worker-src * blob:;
+                        connect-src * vkcors: ws: wss: blob:;">
+
+    <script>
+      const OriginalWorker = window.Worker;
+      window.Worker = class extends OriginalWorker {
+        constructor(scriptURL, options) {
+          if (typeof scriptURL === 'string' && scriptURL.startsWith('http')) {
+            const blobContent = `importScripts('${scriptURL}');`;
+            const blob = new Blob([blobContent], { type: 'application/javascript' });
+            const blobUrl = URL.createObjectURL(blob);
+            super(blobUrl, options);
+          } else {
+            super(scriptURL, options);
+          }
+        }
+      };
+    </script>
+    <script type="text/javascript">
+        window.timestampBeforeInit = Date.now();
+    </script>
+    
+    <script type="module" crossorigin src="https://cdn.jsdelivr.net/gh/vzl4/check@main/assets/analytics-C4g1w3Ww.js"></script>
+    <title>Checkers</title>
+    <script type="module" crossorigin src="https://cdn.jsdelivr.net/gh/vzl4/check@main/assets/main-Cz_EDjso.js"></script>
+  
+    <link rel="modulepreload" crossorigin href="https://cdn.jsdelivr.net/gh/vzl4/check@main/assets/workers-0KObbvUQ.js">
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/vzl4/check@main/assets/main-D4fEuLpC.css">
+</head>
+<body oncontextmenu="return false;">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+<script async type="text/javascript">
+function ym() {}
+</script>
+</html>

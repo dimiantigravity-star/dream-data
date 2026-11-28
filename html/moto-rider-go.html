@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="mobile-web-app-capable" content="yes">
+	<title>Moto Rider GO</title>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+    <link rel="stylesheet" href="https://113397993-766422267966295180.preview.editmysite.com/uploads/b/147918137-855864579879485336/files/app.css" type="text/css">
+    <script src="https://113397993-766422267966295180.preview.editmysite.com/uploads/b/147918137-855864579879485336/files/js/api.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0 auto;
+            padding: 0 auto;
+            width: 100%;
+            height: 100%;
+            overflow: hidden
+        }
+
+        #adsbox {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 999;
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+</head>
+<body>
+    <body>
+        <div id="canvas-wrapper" style="overflow:hidden; width:100%; height:100%; margin:0; padding:0; position:absolute;">
+            <canvas id="canvas" moz-opaque></canvas>
+        </div>  
+</body>
+
+    <script>
+        window.famobi_gameID ="highway-rider-extreme"; 
+        window.famobi_gameJS = ['https://113397993-766422267966295180.preview.editmysite.com/uploads/b/147918137-855864579879485336/files/js/all.js',
+            function() {
+                extGameLoad();
+            }
+        ];
+        (function(document, url, fgJS, firstJS) {
+            fgJS = document.createElement('script');
+            firstJS = document.getElementsByTagName('script')[0];
+
+            fgJS.src = url + encodeURIComponent(document.location.href);
+            firstJS.parentNode.insertBefore(fgJS, firstJS);
+        })(document, 'https://113397993-766422267966295180.preview.editmysite.com/uploads/b/147918137-855864579879485336/files/js/v1.js?e=');
+    </script>
+
+
+      <div id="adsbox" style="display: block;"></div>
+      <script type="text/javascript">
+         $("#adsbox").click(function () {
+             sdk.showBanner();
+             $('#adsbox').hide();
+         });
+         setTimeout(function(){  $('#adsbox').show(); }, 1000); 
+         
+         window.setInterval(function(){
+             $('#adsbox').show();
+         }, 120000); 
+      </script>
+
+
+    
+    <script type="text/javascript">
+        window.SDK_OPTIONS = {
+            gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
+            onEvent: function(a) {
+                switch (a.name) {
+                    case "SDK_GAME_PAUSE":
+                        break;
+                    case "SDK_GAME_START":
+                        break;
+                    case "SDK_READY":
+                        break;
+                }
+            }
+        };
+        (function(a, b, c) {
+            var d = a.getElementsByTagName(b)[0];
+            a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js", d.parentNode.insertBefore(a, d))
+        })(document, "script", "gamemonetize-sdk");
+    </script>
+	<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+</html>

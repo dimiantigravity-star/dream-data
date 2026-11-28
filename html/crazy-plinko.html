@@ -1,0 +1,69 @@
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Crazy Plinko</title>
+
+    <link rel="stylesheet" href="https://34456722-646156226650817304.preview.editmysite.com/uploads/b/139890129-332745416917928800/files/as/style.css">
+
+    <style>
+
+      html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #1d1f21; }
+
+      #app { width: 100%; height: 100%; }
+
+      canvas { display: block; }
+
+      #rotate-screen-overlay {
+
+        display: none;
+
+        position: fixed;
+
+        top: 50%;
+
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+
+        z-index: 999999;
+
+        pointer-events: none;
+
+      }
+
+    </style>
+
+    <div class="font_preload" style="opacity: 0; position: absolute; left: -9999px;">
+
+      <span style="font-family: 'LilitaOne', Arial, sans-serif;">.</span>
+
+      <span style="font-family: 'BareMarker', Arial, sans-serif;">.</span>
+
+      <span style="font-family: 'Gilroy', Arial, sans-serif;">.</span>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+
+    <script src="https://34456722-646156226650817304.preview.editmysite.com/uploads/b/139890129-332745416917928800/files/js/InlogicUtility.js"></script>
+
+    <script src="https://34456722-646156226650817304.preview.editmysite.com/uploads/b/139890129-332745416917928800/files/js/ge.js"></script> 
+
+  </head>
+
+  <body style="background: #000000;">
+
+    <img id="rotate-screen-overlay" src="https://34456722-646156226650817304.preview.editmysite.com/uploads/b/139890129-332745416917928800/files/as/graphics/html/rotate_screen.png" alt="rotate_img">
+
+    <div id="app"></div>
+
+  </body>
+
+</html>

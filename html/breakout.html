@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1, IE=9">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Phaser App">
+    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
+	<title>Breakout</title>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-MENBM6GSNY")</script>
+    <link rel="stylesheet" href="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/css/stylesheet.css" type="text/css" charset="utf-8" />
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/js/phaser.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/Boot.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/Preloader.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/MainMenu.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/help.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/picker.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/NxtRound.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/Game.js"></script>
+    <script src="https://147285930-138462055836138504.preview.editmysite.com/uploads/b/146211889-931117621271048823/files/src/GameOver.js"></script>
+</head>
+
+<body>
+
+    <div id="game"></div>
+    <div id="orientation"></div>
+
+    <script type="text/javascript">
+        (function() {
+
+
+            var game = new Phaser.Game(768, 1024, Phaser.CANVAS, 'game');
+
+
+            game.state.add('Boot', BasicGame.Boot);
+            game.state.add('Preloader', BasicGame.Preloader);
+            game.state.add('MainMenu', BasicGame.MainMenu);
+            game.state.add('picker', BasicGame.picker);
+            game.state.add('NxtRound', BasicGame.NxtRound);
+            game.state.add('help', BasicGame.help);
+            game.state.add('Game', BasicGame.Game);
+            game.state.add('GameOver', BasicGame.GameOver);
+
+
+            game.state.start('Boot');
+
+        })();
+    </script>
+	
+	
+	<script type="text/javascript">
+   window.SDK_OPTIONS = {
+      gameId: "s5ng07biea6t2o7us9udvu8xrifcj8xc",
+      onEvent: function (a) {
+         switch (a.name) {
+            case "SDK_GAME_PAUSE":
+               // pause game logic / mute audio
+               break;
+            case "SDK_GAME_START":
+               // advertisement done, resume game logic and unmute audio
+               break;
+            case "SDK_READY":
+               // when sdk is ready
+               break;
+         }
+      }
+   };
+(function (a, b, c) {
+   var d = a.getElementsByTagName(b)[0];
+   a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src ="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdk.js", d.parentNode.insertBefore(a, d))
+})(document, "script", "gamemonetize-sdk"); 
+</script>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+</body>
+
+</html>

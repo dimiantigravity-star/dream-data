@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
+    <meta name="theme-color" content="#120d0a">
+
+    <style>html,body{background:#120d0a;height:100%;margin:0;overflow:hidden}#loading{z-index:10;color:#f2c14e;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none;background:radial-gradient(at 50% 38%,#3a2616,#120d0a 72%);place-items:center;font:900 16px/1.2 system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;transition:opacity .25s;display:grid;position:fixed;top:0;bottom:0;left:0;right:0}#loading.out{opacity:0;pointer-events:none}.ld{flex-direction:column;align-items:center;gap:16px;display:flex}.ld svg{transform-origin:50% 85%;width:76px;height:76px;animation:.9s ease-in-out infinite ld-swing}.ld b{letter-spacing:4px;text-shadow:0 3px #000,0 0 18px #f2c14e59;min-height:1.2em;font-size:36px}.ld-bar{background:#2a211b;border:2px solid #000;border-radius:6px;width:180px;height:10px;position:relative;overflow:hidden}.ld-bar i{background:linear-gradient(#ffe066,#e2a61c);width:40%;animation:1.1s ease-in-out infinite ld-run;position:absolute;top:0;bottom:0;left:-40%}@keyframes ld-run{to{left:100%}}@keyframes ld-swing{50%{transform:rotate(-16deg)}}</style>
+
+    <link rel="stylesheet" crossorigin="" href="https://7256404-988886447494022311.preview.editmysite.com/uploads/b/139890129-353335384598744268/files/ats/index-8JUCfH2Q.css">
+
+  </head>
+
+  <body>
+
+    <div id="app">
+
+      <canvas id="game"></canvas>
+
+      <div id="hud" class="hidden"></div>
+
+      <div id="screen"></div>
+
+      <div id="toasts"></div>
+
+      <div id="loading">
+
+        <div class="ld">
+
+          <svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="#8a5a30" d="M7 6h2v9H7z"></path><path fill="#b8c0c6" d="M2 3h12v2h-2v1H4V5H2z"></path><path fill="#e8eef2" d="M3 3h5v1H3z"></path></svg>
+
+          <b id="ld-title"></b>
+
+          <div class="ld-bar"><i></i></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      (function () {
+
+        var started = false, b = window.bridge;
+
+        function boot(lang) {
+
+          if (started) return;
+
+          started = true;
+
+          var ru = lang === 'ru', t = document.getElementById('ld-title');
+
+          document.documentElement.lang = ru ? 'ru' : 'en';
+
+          document.title = ru ? 'Недра' : 'Nedra';
+
+          if (t) t.textContent = ru ? 'Недра' : 'Nedra';
+
+          var s = document.createElement('script');
+
+          s.type = 'module';
+
+          s.src = ru ? 'https://7256404-988886447494022311.preview.editmysite.com/uploads/b/139890129-353335384598744268/files/ats/index-C-ULmLFC.js' : 'https://7256404-988886447494022311.preview.editmysite.com/uploads/b/139890129-353335384598744268/files/ats/index-C-1ULmLFC-en.js';
+
+          document.body.appendChild(s);
+
+        }
+
+        try {
+
+          if (b && typeof b.initialize === 'function') {
+
+            setTimeout(function () { boot('en'); }, 8000);
+
+            Promise.resolve(b.initialize()).then(function () {
+
+              var l = '';
+
+              try { l = String(b.platform.language || '').slice(0, 2).toLowerCase(); } catch (e) { l = ''; }
+
+              boot(l === 'ru' ? 'ru' : 'en');
+
+            }, function () { boot('en'); });
+
+          } else boot('en');
+
+        } catch (e) { boot('en'); }
+
+      })();
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+
+  <meta name="theme-color" content="#151a28">
+
+<style>body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#151a28;touch-action:none;-webkit-user-select:none;user-select:none}#uc{position:fixed;inset:0;width:100%;height:100%;display:block;background:#151a28;outline:0}#loader{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(circle at 50% 40%,#2a3350 0,#151a28 70%);font-family:"Trebuchet MS","Segoe UI",sans-serif;transition:opacity .4s;z-index:2}#loader.done{opacity:0;pointer-events:none}.title{font-size:clamp(34px,8vw,84px);font-weight:900;letter-spacing:.02em;line-height:.95;text-align:center;color:#ffd23f;-webkit-text-stroke:3px #3b1f00;text-shadow:0 6px 0 #3b1f00;animation:wob 1.6s ease-in-out infinite}.title span{display:block;color:#86ef5c;-webkit-text-stroke:3px #0b3316;text-shadow:0 6px 0 #0b3316}@keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}.bar{width:min(420px,70vw);height:22px;border-radius:11px;background:rgba(0,0,0,.45);border:2px solid rgba(255,255,255,.1);overflow:hidden}.fill{height:100%;width:0%;border-radius:9px;background:repeating-linear-gradient(-45deg,#fba919 0 14px,#ffe066 14px 28px);transition:width .2s}.msg{color:#9aa4bc;font-size:14px;letter-spacing:.08em}#error{color:#f87171;font-size:15px;max-width:80vw;text-align:center;display:none}</style>
+
+</head>
+
+<body>
+
+  <script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+
+  <canvas id="uc" tabindex="-1"></canvas>
+
+  <div id="loader">
+
+    <div class="title">WAREHOUSE<span>WOBBLE 3D</span></div>
+
+    <div class="bar"><div class="fill" id="fill"></div></div>
+
+    <div class="msg" id="msg">LOADING THE WAREHOUSE...</div>
+
+    <div id="error"></div>
+
+  </div>
+
+  <script>
+
+    var canvas = document.getElementById("uc");
+
+    var dpr = Math.min(window.devicePixelRatio || 1, /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 1.5 : 2);
+
+    var config = {
+
+      dataUrl: "https://cdn.jsdelivr.net/gh/enykop/concise@5ccc1ebcc8f3d7adc1e842f245ee5fa6f95e8c22/src/structures.js",
+
+      frameworkUrl: "https://cdn.jsdelivr.net/gh/enykop/concise@5ccc1ebcc8f3d7adc1e842f245ee5fa6f95e8c22/src/func.js",
+
+      codeUrl: "https://cdn.jsdelivr.net/gh/enykop/concise@5ccc1ebcc8f3d7adc1e842f245ee5fa6f95e8c22/src/reducer.js",
+
+      streamingAssetsUrl: "StreamingAssets",
+
+      companyName: "Warehouse Wobble",
+
+      productName: "Warehouse Wobble 3D",
+
+      productVersion: "1.0",
+
+      devicePixelRatio: dpr,
+
+      webglContextAttributes: { powerPreference: "high-performance", antialias: false }
+
+    };
+
+    function startUnity() {
+
+    var script = document.createElement("script");
+
+    script.src = "https://cdn.jsdelivr.net/gh/enykop/concise@5ccc1ebcc8f3d7adc1e842f245ee5fa6f95e8c22/src/library.js";
+
+    script.onload = function () {
+
+      createUnityInstance(canvas, config, function (p) {
+
+        document.getElementById("fill").style.width = Math.round(p * 100) + "%";
+
+      }).then(function (instance) {
+
+        document.getElementById("loader").classList.add("done");
+
+        canvas.focus();
+
+        window.unityInstance = instance;
+
+        if (/[?&]benchmark=/.test(location.search)) startBenchmark();
+
+      }).catch(function (message) {
+
+        document.getElementById("msg").style.display = "none";
+
+        var e = document.getElementById("error");
+
+        e.style.display = "block";
+
+        e.textContent = "Could not start the game: " + message;
+
+      });
+
+    };
+
+    document.body.appendChild(script);
+
+    }
+
+    var portalScript = document.createElement("script");
+
+    portalScript.src = "https://cdn.jsdelivr.net/gh/enykop/concise@5ccc1ebcc8f3d7adc1e842f245ee5fa6f95e8c22/src/prl.js";
+
+    var started = false;
+
+    function go() {
+
+      if (started) return; started = true;
+
+      var ready = window.WWPortalReady || Promise.resolve();
+
+      var timeout = new Promise(function (r) { setTimeout(r, 8000); });   
+
+      Promise.race([ready.catch(function () { }), timeout]).then(startUnity);
+
+    }
+
+    portalScript.onload = go;
+
+    portalScript.onerror = go;
+
+    document.head.appendChild(portalScript);
+
+    canvas.addEventListener("pointerdown", function () { canvas.focus(); });
+
+    function startBenchmark() {
+
+      var t0 = performance.now() + 8000, end = t0 + 20000, last = 0, times = [];
+
+      function tick(now) {
+
+        if (now >= t0) { if (last) times.push(now - last); last = now; }
+
+        if (now < end) { requestAnimationFrame(tick); return; }
+
+        times.sort(function (a, b) { return a - b; });
+
+        var avg = times.reduce(function (a, b) { return a + b; }, 0) / times.length;
+
+        var p95 = times[Math.floor(times.length * 0.95)], p99 = times[Math.floor(times.length * 0.99)];
+
+        var r = 'BENCH fps=' + (1000 / avg).toFixed(1) + ' avg=' + avg.toFixed(2) + 'ms p95=' + p95.toFixed(2) + 'ms p99=' + p99.toFixed(2) + 'ms frames=' + times.length +
+
+                ' canvas=' + canvas.width + 'x' + canvas.height;
+
+        console.log(r);
+
+        document.title = r;
+
+      }
+
+      requestAnimationFrame(tick);
+
+    }
+
+  </script>
+
+</body>
+
+</html>
+
